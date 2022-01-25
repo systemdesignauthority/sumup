@@ -4,6 +4,7 @@ import os.path
 import base64
 import email
 from bs4 import BeautifulSoup
+import re
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -65,7 +66,7 @@ def main():
                         sender = d['value']
   
                 # Only interested in messages that are new order and from sumupstore.com
-                if (subject=="New order") and (sender=="no-reply@sumupstore.com"):
+                if (subject=="New order") and (sender=="\"SumUp.com\" <no-reply@sumupstore.com>"):
 
                     # The Body of the message is in Encrypted format. So, we have to decode it.
                     # Get the data and decode it with base 64 decoder.
@@ -76,14 +77,47 @@ def main():
   
                     # Now, the data obtained is in lxml. So, we will parse 
                     # it with BeautifulSoup library
-                    soup = BeautifulSoup(decoded_data , "lxml")
-                    body = soup.body()
-  
-                # Printing the subject, sender's email and message
-                #print("Subject: ", subject)
-                #print("From: ", sender)
-                #print("Message: ", body)
-                #print('\n')
+                    #soup = BeautifulSoup(decoded_data , "html.parser")
+                    #body = soup.body()
+
+                    #decoded_data_clean = decoded_data.decode("utf-8").replace("\r","").replace("\n","").replace(" +","").replace(" +","")
+                    decoded_data_clean = re.sub('  {2,}', '', decoded_data.decode("utf-8")).replace("\r","")
+                    
+                    
+                    print(decoded_data_clean)
+                    
+                    no_pos = decoded_data_clean.find("New order")
+                    pm_pos = decoded_data_clean.find("Payment method")
+                    dm_pos = decoded_data_clean.find("Delivery method")
+                    cd_pos = decoded_data_clean.find("Customer details")
+                    pl_pos = decoded_data_clean.find("Pick-up location")
+                    vo_pos = decoded_data_clean.find("View order")
+                    os_pos = decoded_data_clean.find("Order Summary")
+                    t_pos = decoded_data_clean.find("Total")
+
+                    print(decoded_data_clean[no_pos:pm_pos])
+
+                    print("/nline")
+                    print(re.findall('#.*',decoded_data_clean[no_pos:pm_pos]))
+                    print(re.findall('....\/..\/..',decoded_data_clean[no_pos:pm_pos]))
+                    print(re.findall('..:..:..',decoded_data_clean[no_pos:pm_pos]))
+                    print(re.findall('[a-zA-Z_]+',decoded_data_clean[no_pos+11:pm_pos]))
+                    print("/nline")
+
+                    print(decoded_data_clean[pm_pos:dm_pos])
+                    print(decoded_data_clean[dm_pos:cd_pos])
+                    print(decoded_data_clean[cd_pos:pl_pos])
+                    print(decoded_data_clean[pl_pos:vo_pos])
+                    #print(decoded_data_clean[vo_pos:os_pos])
+                    print(decoded_data_clean[os_pos:t_pos])
+                    print(decoded_data_clean[t_pos:])
+
+                    # Printing the subject, sender's email and message
+                    #print("Subject: ", subject)
+                    #print("From: ", sender)
+                    #print("Message: ", body)
+                    #print("Message: ", decoded_data)
+                    #print('\n')
 
 
 

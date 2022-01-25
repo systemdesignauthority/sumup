@@ -43,6 +43,8 @@ def main():
         #jac
         results2 = service.users().messages().list(userId='me').execute() 
         messages = results2.get('messages', [])
+        for message in messages:
+            messageTxt = service.users().messages().get(userId='me', id=message['id']).execute()
 
         if not labels:
             print('No labels found.')

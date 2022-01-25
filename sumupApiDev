@@ -1,0 +1,18 @@
+curl --request GET --url 'https://api.sumup.com/authorize?response_type=code&client_id=5UxmEj--5f6DS-rQzPmn2hfMweDo&redirect_uri=https://me.sumup.com/callback&scope=payments&state=2cFCsY36y95lFHk4'
+
+curl -X POST \
+  https://api.sumup.com/token \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'grant_type=authorization_code'\
+  -d 'client_id=5UxmEj--5f6DS-rQzPmn2hfMweDo'\
+  -d 'client_secret=abc1182b055a666b191463779f17aff89f7ea06505cdde73bfd9fc9d814bddf2' \
+  -d 'code='
+
+curl -X POST \
+  https://api.sumup.com/token \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'grant_type=password'\
+  -d 'client_id=5UxmEj--5f6DS-rQzPmn2hfMweDo'\
+  -d 'username=simonballepsa@gmail.com' \
+  -d 'password=E8us[>m";fy%\UT]'
+
